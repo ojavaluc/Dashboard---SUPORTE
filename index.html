@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dashboard SAC</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    /* Base */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background-color: #f4f6f9;
+      color: #333;
+    }
+    header {
+      background: #0366d6;
+      color: #fff;
+      padding: 20px;
+      text-align: center;
+    }
+
+    /* KPIs */
+    .kpis {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      padding: 20px;
+    }
+    .kpi {
+      background: #fff;
+      padding: 18px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    .kpi h3 {
+      margin: 0;
+      font-size: 16px;
+      color: #555;
+    }
+    .kpi p {
+      font-size: 26px;
+      margin: 10px 0 0;
+      color: #0366d6;
+      font-weight: bold;
+    }
+
+    /* Gráficos */
+    .dashboard {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      padding: 20px;
+    }
+    .chart-container {
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    canvas {
+      width: 100% !important;
+      height: 300px !important;
+    }
+
+    /* Tabela */
+    table {
+      width: 92%;
+      margin: 30px auto;
+      border-collapse: collapse;
+      background: #fff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    th, td {
+      padding: 12px;
+      border-bottom: 1px solid #eee;
+      text-align: center;
+    }
+    th {
+      background: #0366d6;
+      color: #fff;
+    }
+    tr:last-child td {
+      border-bottom: none;
+    }
+    .badge-ok {
+      background: #e8f7ea;
+      color: #2b8a3e;
+      padding: 6px 10px;
+      border-radius: 14px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+    .badge-nok {
+      background: #ffe8e8;
+      color: #b13333;
+      padding: 6px 10px;
+      border-radius: 14px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    /* Heatmap de horários (CSS grid) */
+    .heatmap-wrap {
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      margin: 0 20px 20px;
+    }
+    .heatmap-grid {
+      display: grid;
+      grid-template-columns: 100px repeat(12, 1fr);
+      gap: 8px;
+      align-items: center;
+    }
+    .heatmap-header {
+      font-weight: bold;
+      color: #555;
+      text-align: center;
+    }
+    .heatmap-cell {
+      height: 28px;
+      border-radius: 6px;
+      text-align: center;
+      font-size: 12px;
+      color: #222;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .heatmap-label {
+      font-weight: bold;
+      color: #555;
+      text-align: right;
+      padding-right: 8px;
+    }
+    .legend {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-top: 12px;
+      font-size: 12px;
+      color: #666;
+    }
+    .legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .legend-box {
+      width: 18px;
+      height: 12px;
+      border-radius: 3px;
+      display: inline-block;
+    }
+
+    /* Plano de ação */
+    .plano-acao {
+      margin: 30px;
+      padding: 25px;
+      background: linear-gradient(135deg, #ffffff, #e9f2ff);
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .plano-acao h2 {
+      text-align: center;
+      color: #0366d6;
+      margin-bottom: 20px;
+      font-size: 26px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .pontos {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: space-between;
+    }
+    .ponto {
+      flex: 1 1 45%;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      min-width: 280px;
+    }
+    .criticos {
+      background: #ffe5e5;
+      border-left: 6px solid #d9534f;
+    }
+    .positivos {
+      background: #e5ffe9;
+      border-left: 6px solid #5cb85c;
+    }
+    .ponto h3 {
+      margin-top: 0;
+      font-size: 20px;
+    }
+    .ponto ul {
+      margin: 10px 0 0 20px;
+    }
+    .ponto ul li {
+      margin-bottom: 8px;
+    }
+
+    /* Ações extras */
+    .actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      padding: 0 20px 20px;
+    }
+    .btn {
+      background: #0366d6;
+      color: #fff;
+      padding: 10px 14px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .btn.secondary {
+      background: #6c757d;
+    }
+
+    /* Responsividade */
+    @media (max-width: 900px) {
+      .dashboard {
+        grid-template-columns: 1fr;
+      }
+      .kpis {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    @media (max-width: 600px) {
+      .kpis {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Dashboard SAC - Evolução dos Atendentes</h1>
+  </header>
+
+  <!-- KPIs -->
+  <div class="kpis">
+    <div class="kpi"><h3>Tempo Médio de Resposta</h3><p id="kpiTmr">4 min</p></div>
+    <div class="kpi"><h3>Resolução no 1º Contato</h3><p id="kpiFcr">87%</p></div>
+    <div class="kpi"><h3>Satisfação (CSAT)</h3><p id="kpiCsat">92%</p></div>
+    <div class="kpi"><h3>Total de Atendimentos</h3><p id="kpiTotal">526</p></div>
+  </div>
+
+  <!-- Botões de ação -->
+  <div class="actions">
+    <button class="btn" onclick="window.print()">Imprimir/Exportar</button>
+    <button class="btn secondary" onclick="resetarDados()">Resetar dados</button>
+  </div>
+
+  <!-- Gráficos -->
+  <div class="dashboard">
+    <div class="chart-container"><canvas id="graficoSemana"></canvas></div>
+    <div class="chart-container"><canvas id="graficoDiario"></canvas></div>
+    <div class="chart-container"><canvas id="graficoTotal"></canvas></div>
+    <div class="chart-container"><canvas id="graficoPercentualBarras"></canvas></div>
+    <div class="chart-container"><canvas id="graficoMensal"></canvas></div>
+    <div class="chart-container">
+      <h3 style="margin:0 0 10px;color:#555;">Heatmap de Horários (demanda por hora)</h3>
+      <div class="heatmap-wrap">
+        <div class="heatmap-grid" id="heatmapGrid">
+          <!-- Cabeçalho de horas -->
+        </div>
+        <div class="legend">
+          <span><span class="legend-box" style="background:#e8f1ff;"></span>Baixa</span>
+          <span><span class="legend-box" style="background:#a6c8ff;"></span>Média</span>
+          <span><span class="legend-box" style="background:#5b9bff;"></span>Alta</span>
+          <span><span class="legend-box" style="background:#1f6feb;"></span>Pico</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabela -->
+  <table>
+    <thead>
+      <tr>
+        <th>Atendente</th>
+        <th>Total</th>
+        <th>Percentual</th>
+        <th>SLA Cumprido</th>
+      </tr>
+    </thead>
+    <tbody id="tabelaAtendentes"></tbody>
+  </table>
+
+  <!-- Plano de Ação -->
+  <div class="plano-acao">
+    <h2>Plano de Ação do Setor</h2>
+    <div class="pontos">
+      <div class="ponto criticos">
+        <h3>Pontos Críticos 🚨</h3>
+        <ul>
+          <li>Tempo médio de resposta acima do esperado em horários de pico.</li>
+          <li>Fila concentrada em determinados dias da semana.</li>
+          <li>Padronização de scripts ainda incompleta em parte da equipe.</li>
+        </ul>
+      </div>
+      <div class="ponto positivos">
+        <h3>Pontos Positivos 🌟</h3>
+        <ul>
+          <li>Ótima evolução semanal de produtividade.</li>
+          <li>Resolução em primeiro contato elevada.</li>
+          <li>Feedback dos clientes com CSAT acima de 90%.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Base de dados (você pode integrar com CSV/JSON/Planilha no futuro)
+    const atendentes = ["Giselle", "Francisco", "Joice", "João", "Eder", "Lucas"];
+    let totais = [103, 92, 81, 115, 63, 72];
+    const totalGeral = () => totais.reduce((a, b) => a + b, 0);
+    const percentuais = () => totais.map(v => ((v / totalGeral()) * 100).toFixed(1));
+
+    // KPIs (exemplo estático; altere conforme seus dados)
+    document.getElementById("kpiTotal").textContent = totalGeral();
+
+    // Semanais (dados fictícios)
+    const semanaLabels = ["Semana 1", "Semana 2", "Semana 3", "Semana 4"];
+    const semanaData = [
+      [20, 25, 30, 28], // Giselle
+      [18, 22, 27, 25], // Francisco
+      [15, 20, 22, 24], // Joice
+      [25, 28, 30, 32], // João
+      [10, 15, 18, 20], // Eder
+      [12, 18, 20, 22]  // Lucas
+    ];
+
+    // Diário (simulado)
+    const dias = ["Dia 1","Dia 2","Dia 3","Dia 4","Dia 5","Dia 6","Dia 7"];
+    const dadosDiarios = atendentes.map(() => dias.map(() => Math.floor(Math.random()*10+10)));
+
+    // Mensal (últimos 6 meses simulados)
+    const meses = ["Jul", "Ago", "Set", "Out", "Nov", "Dez"];
+    const dadosMensais = atendentes.map(() => meses.map(() => Math.floor(Math.random()*80+40)));
+
+    // Gráfico: Atendimentos por Semana
+    new Chart(document.getElementById("graficoSemana"), {
+      type: "bar",
+      data: {
+        labels: semanaLabels,
+        datasets: atendentes.map((nome, i) => ({
+          label: nome,
+          data: semanaData[i],
+          backgroundColor: `hsl(${i*60},70%,60%)`
+        }))
+      },
+      options: {
+        plugins: { title: { display: true, text: "Atendimentos por Semana" } },
+        responsive: true,
+        scales: { y: { beginAtZero: true } }
+      }
+    });
+
+    // Gráfico: Evolução Diária
+    new Chart(document.getElementById("graficoDiario"), {
+      type: "line",
+      data: {
+        labels: dias,
+        datasets: atendentes.map((nome, i) => ({
+          label: nome,
+          data: dadosDiarios[i],
+          borderColor: `hsl(${i*60},70%,50%)`,
+          tension: 0.25,
+          fill: false
+        }))
+      },
+      options: {
+        plugins: { title: { display: true, text: "Evolução Diária de Atendimentos" } },
+        responsive: true
+      }
+    });
+
+    // Gráfico: Total por Atendente (barras horizontais)
+    new Chart(document.getElementById("graficoTotal"), {
+      type: "bar",
+      data: {
+        labels: atendentes,
+        datasets: [{
+          label: "Total de Atendimentos",
+          data: totais,
+          backgroundColor: atendentes.map((_,i)=>`hsl(${i*60},70%,60%)`)
+        }]
+      },
+      options: {
+        indexAxis: "y",
+        plugins: { title: { display: true, text: "Total de Atendimentos por Atendente" } },
+        responsive: true
+      }
+    });
+
+    // Gráfico: Participação Percentual (barras horizontais)
+    function renderPercentualChart() {
+      const ctx = document.getElementById("graficoPercentualBarras");
+      return new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: atendentes,
+          datasets: [{
+            label: "Participação Percentual (%)",
+            data: percentuais(),
+            backgroundColor: atendentes.map((_, i) => `hsl(${i * 60}, 70%, 60%)`)
+          }]
+        },
+        options: {
+          indexAxis: "y",
+          plugins: {
+            title: {
+              display: true,
+              text: "Participação Percentual no Total"
+            },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  const nome = context.label;
+                  const percentual = context.raw;
+                  const valor = totais[context.dataIndex];
+                  return `${nome}: ${valor} atendimentos (${percentual}%)`;
+                }
+              }
+            }
+          },
+          responsive: true,
+          scales: {
+            x: {
+              beginAtZero: true,
+              max: 100,
+              ticks: {
+                callback: (value) => value + "%"
+              }
+            }
+          }
+        }
+      });
+    }
+    let chartPercentual = renderPercentualChart();
+
+    // Gráfico: Tendência Mensal (linha)
+    new Chart(document.getElementById("graficoMensal"), {
+      type: "line",
+      data: {
+        labels: meses,
+        datasets: atendentes.map((nome, i) => ({
+          label: nome,
+          data: dadosMensais[i],
+          borderColor: `hsl(${i*60},70%,50%)`,
+          tension: 0.25,
+          fill: false
+        }))
+      },
+      options: {
+        plugins: { title: { display: true, text: "Tendência Mensal (últimos 6 meses)" } },
+        responsive: true
+      }
+    });
+
+    // Heatmap de horários (CSS grid, sem plugin)
+    // Horas 8h–19h (12 colunas)
+    const horas = ["08h","09h","10h","11h","12h","13h","14h","15h","16h","17h","18h","19h"];
+    const diasSemana = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
+    // Simula volumes por hora/dia
+    const volumes = diasSemana.map(() => horas.map(() => Math.floor(Math.random()*40+5)));
+
+    function corPorVolume(v) {
+      if (v < 15) return "#e8f1ff";     // baixa
+      if (v < 25) return "#a6c8ff";     // média
+      if (v < 35) return "#5b9bff";     // alta
+      return "#1f6feb";                 // pico
+    }
+
+    function renderHeatmap() {
+      const grid = document.getElementById("heatmapGrid");
+      grid.innerHTML = "";
+      // Primeira linha: vazio + cabeçalho de horas
+      const vazio = document.createElement("div");
+      vazio.className = "heatmap-header";
+      vazio.textContent = "";
+      grid.appendChild(vazio);
+      horas.forEach(h => {
+        const hCell = document.createElement("div");
+        hCell.className = "heatmap-header";
+        hCell.textContent = h;
+        grid.appendChild(hCell);
+      });
+      // Linhas por dia
+      diasSemana.forEach((dia, dIdx) => {
+        const label = document.createElement("div");
+        label.className = "heatmap-label";
+        label.textContent = dia;
+        grid.appendChild(label);
+        horas.forEach((_, hIdx) => {
+          const v = volumes[dIdx][hIdx];
+          const cell = document.createElement("div");
+          cell.className = "heatmap-cell";
+          cell.style.background = corPorVolume(v);
+          cell.title = `${dia} ${horas[hIdx]}: ${v} atendimentos`;
+          cell.textContent = v;
+          grid.appendChild(cell);
+        });
+      });
+    }
+    renderHeatmap();
+
+    // Tabela dinâmica
+    function renderTabela() {
+      const corpo = document.getElementById("tabelaAtendentes");
+      corpo.innerHTML = "";
+      const perc = percentuais();
+      atendentes.forEach((nome, i) => {
+        const tr = document.createElement("tr");
+        const tdNome = document.createElement("td"); tdNome.textContent = nome;
+        const tdTotal = document.createElement("td"); tdTotal.textContent = totais[i];
+        const tdPerc = document.createElement("td"); tdPerc.textContent = perc[i] + "%";
+        const tdSla = document.createElement("td");
+        const badge = document.createElement("span");
+        // Exemplo de SLA: >=80 atendimentos cumpre
+        const slaOK = totais[i] >= 80;
+        badge.className = slaOK ? "badge-ok" : "badge-nok";
+        badge.textContent = slaOK ? "Cumprido" : "Não cumprido";
+        tdSla.appendChild(badge);
+        tr.append(tdNome, tdTotal, tdPerc, tdSla);
+        corpo.appendChild(tr);
+      });
+    }
+    renderTabela();
+
+    // Resetar dados (exemplo simples)
+    function resetarDados() {
+      totais = [103, 92, 81, 115, 63, 72];
+      document.getElementById("kpiTotal").textContent = totalGeral();
+      // Re-render percentuais
+      chartPercentual.destroy();
+      chartPercentual = renderPercentualChart();
+      // Re-render tabela
+      renderTabela();
+      // Re-render heatmap (gera novos aleatórios)
+      for (let d = 0; d < volumes.length; d++) {
+        for (let h = 0; h < volumes[d].length; h++) {
+          volumes[d][h] = Math.floor(Math.random()*40+5);
+        }
+      }
+      renderHeatmap();
+      alert("Dados resetados e visualizações atualizadas.");
+    }
+  </script>
+</body>
+</html>
