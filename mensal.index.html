@@ -196,6 +196,130 @@
         grid-template-columns: 1fr;
       }
     }
+    /* Destaque da Semana */
+.destaque-semana {
+  margin: 0 24px 50px;
+  padding: 30px;
+  background: linear-gradient(135deg, #ffffff, #eef4ff);
+  border-radius: 18px;
+  box-shadow: 0 6px 18px rgba(0,0,0,.12);
+  animation: fadeUp 1s ease;
+}
+
+.destaque-semana h2 {
+  text-align: center;
+  color: #0366d6;
+  margin-bottom: 30px;
+  font-size: 26px;
+}
+
+.podio {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.posicao {
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px 18px 30px;
+  width: 220px;
+  text-align: center;
+  box-shadow: 0 4px 14px rgba(0,0,0,.1);
+  position: relative;
+  animation: subir 1.2s ease forwards;
+}
+
+.posicao h3 {
+  margin: 12px 0 6px;
+  font-size: 18px;
+}
+
+.metricas {
+  font-size: 14px;
+  color: #555;
+}
+
+.foto img {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  border: 4px solid #0366d6;
+}
+
+.base {
+  position: absolute;
+  bottom: -18px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #0366d6;
+  color: #fff;
+  width: 60px;
+  height: 36px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+/* Destaques */
+.primeiro {
+  transform: scale(1.08);
+  border: 3px solid #ffd700;
+}
+
+.segundo .foto img {
+  border-color: #adb5bd;
+}
+
+.terceiro .foto img {
+  border-color: #cd7f32;
+}
+
+.badge {
+  display: inline-block;
+  margin-top: 8px;
+  background: #ffd700;
+  color: #333;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+/* Animações */
+@keyframes subir {
+  from {
+    transform: translateY(40px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .podio {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
   </style>
 </head>
 
@@ -261,7 +385,7 @@
 
 <script>
   const atendentes = ["Giselle", "Francisco", "Joice", "João", "Vinicius", "Lucas"];
-  const totais = [19, 281, 217, 274, 220, 91];
+  const totais = [25, 307, 194, 281, 244, 127];
   const totalGeral = totais.reduce((a,b)=>a+b,0);
 
   document.getElementById("kpiTotal").textContent = totalGeral;
@@ -315,7 +439,43 @@
     `;
     tbody.appendChild(tr);
   });
+  
 </script>
+<section class="destaque-semana">
+  <h2>🏆 Destaque da Semana</h2>
+
+  <div class="podio">
+
+    <div class="posicao segundo">
+      <div class="foto">
+        <img src="image (2).png" alt="Segundo lugar">
+      </div>
+      <h3>João</h3>
+      <span class="metricas">281 atendimentos</span>
+      <div class="base">2º</div>
+    </div>
+
+    <div class="posicao primeiro destaque">
+      <div class="foto">
+        <img src="image.png" alt="Primeiro lugar">
+      </div>
+      <h3>Francisco</h3>
+      <span class="metricas">307 atendimentos</span>
+      <span class="badge">⭐ Destaque</span>
+      <div class="base">1º</div>
+    </div>
+
+    <div class="posicao terceiro">
+      <div class="foto">
+        <img src="image (1).png" alt="Terceiro lugar">
+      </div>
+      <h3>Vinicius</h3>
+      <span class="metricas">244 atendimentos</span>
+      <div class="base">3º</div>
+    </div>
+
+  </div>
+</section>
 
 </body>
 </html>
