@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Dashboard OS - Operacional</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+:root {
+  --azul: #1e5bd7;
+  --azul-escuro: #0b3fa8;
+  --laranja: #ff8c1a;
+  --cinza: #f4f6f9;
+  --branco: #ffffff;
+  --sombra: 0 14px 35px rgba(0,0,0,0.15);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: linear-gradient(180deg, #eef3ff, #ffffff);
+  color: #333;
+}
+
+header {
+  background: linear-gradient(135deg, var(--azul), var(--azul-escuro));
+  color: var(--branco);
+  padding: 22px;
+  text-align: center;
+  box-shadow: var(--sombra);
+}
+
+header h1 {
+  margin: 0;
+  font-size: 26px;
+}
+
+/* Layout */
+.container {
+  max-width: 1300px;
+  margin: auto;
+  padding: 25px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 22px;
+}
+
+/* Cards */
+.card {
+  background: var(--branco);
+  border-radius: 20px;
+  padding: 22px;
+  box-shadow: var(--sombra);
+  position: relative;
+  overflow: hidden;
+  animation: fadeUp 0.8s ease;
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 6px;
+  width: 100%;
+  background: linear-gradient(90deg, var(--laranja), var(--azul));
+}
+
+.card h2 {
+  margin: 0 0 10px;
+  font-size: 15px;
+  text-transform: uppercase;
+  color: var(--azul);
+}
+
+/* Números */
+.numero {
+  font-size: 46px;
+  font-weight: bold;
+  color: var(--laranja);
+}
+
+/* Destaque principal */
+.destaque {
+  grid-column: span 2;
+  background: linear-gradient(135deg, var(--laranja), #ffb866);
+  color: var(--branco);
+}
+
+.destaque h2 { color: var(--branco); }
+.destaque .numero { font-size: 64px; color: var(--branco); }
+
+/* Área central */
+.area-central {
+  grid-column: span 3;
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 22px;
+}
+
+/* Ranking */
+.ranking-grande h2 {
+  font-size: 18px;
+}
+
+.ranking-grande ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.ranking-grande li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px;
+  margin-bottom: 14px;
+  border-radius: 16px;
+  font-size: 18px;
+  font-weight: 600;
+  background: var(--cinza);
+  opacity: 0;
+  transform: translateX(-40px);
+  animation: entrar 0.6s ease forwards;
+  position: relative;
+  overflow: hidden;
+}
+
+.ranking-grande li::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.7), transparent);
+  animation: brilho 3s infinite;
+}
+
+.ranking-grande li:nth-child(1) {
+  background: linear-gradient(135deg, #ffd699, #ffb347);
+  font-size: 20px;
+  box-shadow: 0 10px 25px rgba(255,140,26,0.5);
+}
+
+/* Motivos */
+.motivos .barra {
+  margin-top: 18px;
+}
+
+.barra span {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.progresso {
+  height: 14px;
+  background: #ddd;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.progresso div {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, var(--laranja), var(--azul));
+  border-radius: 10px;
+  animation: crescer 1.2s ease forwards;
+}
+
+/* Animações */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes entrar {
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes brilho {
+  0% { left: -100%; }
+  50% { left: 100%; }
+  100% { left: 100%; }
+}
+
+@keyframes crescer {
+  from { width: 0; }
+  to { width: var(--valor); }
+}
+
+/* Mobile */
+@media (max-width: 900px) {
+  .destaque { grid-column: span 1; }
+  .area-central {
+    grid-column: span 1;
+    grid-template-columns: 1fr;
+  }
+}
+.btn-voltar {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 22px;
+  background: linear-gradient(135deg, #ff8c1a, #ffb866);
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  border-radius: 30px;
+  box-shadow: 0 8px 20px rgba(255,140,26,0.45);
+  transition: all 0.3s ease;
+}
+
+.btn-voltar:hover {
+  transform: translateX(-4px);
+  box-shadow: 0 14px 30px rgba(255,140,26,0.65);
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>Dashboard de Ordens de Serviço</h1>
+</header>
+<a href="index.html" class="btn-voltar">
+  ⬅ Voltar
+</a>
+
+<div class="container">
+
+  <div class="card destaque">
+    <h2>OS em andamento agora</h2>
+    <div class="numero" data-valor="58">0</div>
+  </div>
+
+  <div class="card">
+    <h2>OS abertas hoje</h2>
+    <div class="numero" data-valor="18">0</div>
+  </div>
+
+  <div class="card">
+    <h2>OS fechadas no mês</h2>
+    <div class="numero" data-valor="396">0</div>
+  </div>
+
+  <!-- Área central -->
+  <div class="area-central">
+
+    <div class="card ranking-grande">
+      <h2>🏆 Top 3 Técnicos do Mês</h2>
+      <ul>
+        <li style="animation-delay:.2s">🥇 Matheus <span>101 OS</span></li>
+        <li style="animation-delay:.4s">🥈 Heitor <span>85 OS</span></li>
+        <li style="animation-delay:.6s">🥉 Éder Alves <span>80 OS</span></li>
+      </ul>
+    </div>
+
+    <div class="card motivos">
+      <h2>📊 Motivos das Visitas</h2>
+
+      <div class="barra">
+        <span>internet Lenta <strong>30%</strong></span>
+        <div class="progresso"><div style="--valor:30%"></div></div>
+      </div>
+
+      <div class="barra">
+        <span>Sem Internet <strong>55%</strong></span>
+        <div class="progresso"><div style="--valor:55%"></div></div>
+      </div>
+
+      <div class="barra">
+        <span>Outros <strong>15%</strong></span>
+        <div class="progresso"><div style="--valor:15%"></div></div>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+document.querySelectorAll('.numero').forEach(n => {
+  const fim = +n.dataset.valor;
+  let atual = 0;
+  const inc = Math.ceil(fim / 60);
+  const t = setInterval(() => {
+    atual += inc;
+    if (atual >= fim) { atual = fim; clearInterval(t); }
+    n.textContent = atual;
+  }, 25);
+});
+</script>
+
+</body>
+</html>
