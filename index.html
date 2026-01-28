@@ -239,6 +239,25 @@
         grid-template-columns: 1fr;
       }
     }
+    .btn-dashboard {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 26px;
+  background: linear-gradient(135deg, #1e5bd7, #0b3fa8);
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  border-radius: 30px;
+  box-shadow: 0 8px 20px rgba(30,91,215,0.4);
+  transition: all 0.3s ease;
+}
+
+.btn-dashboard:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 14px 30px rgba(30,91,215,0.6);
+}
+
   </style>
 </head>
 <body>
@@ -253,7 +272,11 @@
 <body>
   <h1>Bem-vindo ao Dashboard Anual</h1>
   <a href="mensal.index.html">
-    <button>Ir para Dashboard Mensal</button>
+    <button>📊 Ir para Dashboard Mensal</button>
+    <a href="DashboardOS.html" class="btn-dashboard">
+  📊 Ver Dashboard de OS
+</a>
+
   </a>
 </body>
 </html>
