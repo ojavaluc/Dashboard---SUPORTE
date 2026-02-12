@@ -6,6 +6,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <style>
+    /* ====== BASE ====== */
     body {
       margin: 0;
       font-family: "Segoe UI", Arial, sans-serif;
@@ -38,7 +39,7 @@
       font-size: 14px;
     }
 
-    /* KPIs */
+    /* ====== KPIs ====== */
     .kpis {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -55,24 +56,12 @@
       transition: transform .2s;
     }
 
-    .kpi:hover {
-      transform: translateY(-4px);
-    }
+    .kpi:hover { transform: translateY(-4px); }
 
-    .kpi h3 {
-      margin: 0;
-      font-size: 15px;
-      color: #666;
-    }
+    .kpi h3 { margin: 0; font-size: 15px; color: #666; }
+    .kpi p { margin: 10px 0 0; font-size: 28px; font-weight: bold; color: #0366d6; }
 
-    .kpi p {
-      margin: 10px 0 0;
-      font-size: 28px;
-      font-weight: bold;
-      color: #0366d6;
-    }
-
-    /* Gráficos */
+    /* ====== GRÁFICOS ====== */
     .dashboard {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -87,12 +76,13 @@
       box-shadow: 0 4px 12px rgba(0,0,0,.08);
     }
 
-    canvas {
-      width: 100% !important;
-      height: 300px !important;
+    canvas { width: 100% !important; height: 300px !important; }
+
+    @media (max-width: 900px) {
+      .dashboard { grid-template-columns: 1fr; }
     }
 
-    /* Tabela */
+    /* ====== TABELA ====== */
     table {
       width: calc(100% - 48px);
       margin: 0 24px 30px;
@@ -117,9 +107,7 @@
       font-size: 14px;
     }
 
-    tr:last-child td {
-      border-bottom: none;
-    }
+    tr:last-child td { border-bottom: none; }
 
     .badge-ok {
       background: #e6f7ec;
@@ -139,7 +127,7 @@
       font-weight: bold;
     }
 
-    /* Plano de ação */
+    /* ====== PLANO DE AÇÃO ====== */
     .plano-acao {
       margin: 0 24px 40px;
       padding: 26px;
@@ -168,187 +156,234 @@
       box-shadow: 0 3px 10px rgba(0,0,0,.08);
     }
 
-    .criticos {
-      background: #ffe5e5;
-      border-left: 6px solid #dc3545;
+    .criticos { background: #ffe5e5; border-left: 6px solid #dc3545; }
+    .positivos { background: #e6ffef; border-left: 6px solid #28a745; }
+
+    .ponto h3 { margin-top: 0; font-size: 18px; }
+    .ponto ul { margin: 10px 0 0 18px; }
+    .ponto ul li { margin-bottom: 8px; }
+
+    /* ====== DESTAQUE DA SEMANA ====== */
+    .destaque-semana {
+      margin: 0 24px 50px;
+      padding: 30px;
+      background: linear-gradient(135deg, #ffffff, #eef4ff);
+      border-radius: 18px;
+      box-shadow: 0 6px 18px rgba(0,0,0,.12);
+      animation: fadeUp 1s ease;
     }
 
-    .positivos {
-      background: #e6ffef;
-      border-left: 6px solid #28a745;
+    .destaque-semana h2 {
+      text-align: center;
+      color: #0366d6;
+      margin-bottom: 30px;
+      font-size: 26px;
     }
 
-    .ponto h3 {
-      margin-top: 0;
-      font-size: 18px;
+    .podio {
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 24px;
+      flex-wrap: wrap;
     }
 
-    .ponto ul {
-      margin: 10px 0 0 18px;
+    .posicao {
+      background: #fff;
+      border-radius: 16px;
+      padding: 20px 18px 30px;
+      width: 220px;
+      text-align: center;
+      box-shadow: 0 4px 14px rgba(0,0,0,.1);
+      position: relative;
+      animation: subir 1.2s ease forwards;
     }
 
-    .ponto ul li {
-      margin-bottom: 8px;
+    .posicao h3 { margin: 12px 0 6px; font-size: 18px; }
+    .metricas { font-size: 14px; color: #555; }
+    .foto img { width: 90px; height: 90px; border-radius: 50%; border: 4px solid #0366d6; }
+
+    .base {
+      position: absolute;
+      bottom: -18px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #0366d6;
+      color: #fff;
+      width: 60px;
+      height: 36px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
     }
 
-    @media (max-width: 900px) {
-      .dashboard {
-        grid-template-columns: 1fr;
-      }
-    }
-    /* Destaque da Semana */
-.destaque-semana {
-  margin: 0 24px 50px;
-  padding: 30px;
-  background: linear-gradient(135deg, #ffffff, #eef4ff);
-  border-radius: 18px;
-  box-shadow: 0 6px 18px rgba(0,0,0,.12);
-  animation: fadeUp 1s ease;
-}
+    .primeiro { transform: scale(1.08); border: 3px solid #ffd700; }
+    .segundo .foto img { border-color: #adb5bd; }
+    .terceiro .foto img { border-color: #cd7f32; }
+    .badge { display: inline-block; margin-top: 8px; background: #ffd700; color: #333; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: bold; }
 
-.destaque-semana h2 {
-  text-align: center;
-  color: #0366d6;
-  margin-bottom: 30px;
-  font-size: 26px;
-}
+    @keyframes subir { from { transform: translateY(40px); opacity:0 } to { transform: translateY(0); opacity:1 } }
+    @keyframes fadeUp { from { opacity:0; transform:translateY(30px) } to { opacity:1; transform:translateY(0) } }
 
-.podio {
+    @media (max-width: 768px) { .podio { flex-direction: column; align-items: center; } }
+
+/* ====== QUALIDADE BONITA COMPACTA ====== */
+.qualidade-section {
   display: flex;
   justify-content: center;
-  align-items: flex-end;
-  gap: 24px;
-  flex-wrap: wrap;
+  margin: 40px 0; /* antes 60px */
+  animation: fadeQualidade 0.8s ease;
 }
 
-.posicao {
-  background: #fff;
-  border-radius: 16px;
-  padding: 20px 18px 30px;
-  width: 220px;
+.qualidade-card {
+  width: 100%;
+  max-width: 800px; /* antes 950px */
+  background: linear-gradient(145deg, #ffffff, #e0f0ff);
+  padding: 25px; /* antes 40px */
+  border-radius: 20px; /* antes 24px */
+  box-shadow: 0 12px 30px rgba(0,0,0,.12); /* levemente reduzido */
+  transition: transform .3s ease, box-shadow .3s ease;
+}
+
+.qualidade-card:hover {
+  transform: translateY(-4px); /* antes -5px */
+  box-shadow: 0 20px 40px rgba(0,0,0,.15);
+}
+
+.qualidade-card h2 {
   text-align: center;
-  box-shadow: 0 4px 14px rgba(0,0,0,.1);
-  position: relative;
-  animation: subir 1.2s ease forwards;
+  font-size: 24px; /* antes 32px */
+  color: #0366d6;
+  margin-bottom: 25px; /* antes 35px */
+  letter-spacing: 1px;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.1); /* leve ajuste */
 }
 
-.posicao h3 {
-  margin: 12px 0 6px;
-  font-size: 18px;
+.qualidade-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 6px; /* antes 8px */
+  margin-bottom: 30px; /* antes 40px */
 }
 
-.metricas {
-  font-size: 14px;
-  color: #555;
-}
-
-.foto img {
-  width: 90px;
-  height: 90px;
-  border-radius: 50%;
-  border: 4px solid #0366d6;
-}
-
-.base {
-  position: absolute;
-  bottom: -18px;
-  left: 50%;
-  transform: translateX(-50%);
+.qualidade-table th {
   background: #0366d6;
   color: #fff;
-  width: 60px;
-  height: 36px;
-  border-radius: 12px;
+  padding: 10px; /* antes 14px */
+  font-size: 14px; /* antes 16px */
+  border-radius: 10px 10px 0 0; /* antes 12px */
+  box-shadow: 0 1px 4px rgba(0,0,0,.1);
+}
+
+.qualidade-table td {
+  padding: 10px; /* antes 14px */
+  text-align: center;
+  font-size: 14px; /* antes 16px */
+  background: #f7fbff;
+  border-radius: 10px; /* antes 12px */
+  box-shadow: inset 0 -1px 0 #e0e0e0;
+}
+
+.qualidade-table input {
+  width: 60px; /* antes 80px */
+  padding: 6px; /* antes 8px */
+  border-radius: 10px; /* antes 12px */
+  font-weight: bold;
+  font-size: 14px; /* antes 16px */
+  border: 2px solid #0366d6;
+  text-align: center;
+  transition: all .3s ease;
+  background: #fff;
+}
+
+.qualidade-table input:focus {
+  outline: none;
+  transform: scale(1.08); /* antes 1.1 */
+  box-shadow: 0 0 6px rgba(3,102,214,0.6); /* antes 8px */
+}
+
+/* Ranking compacto */
+.ranking-box { text-align: center; }
+.ranking-box h3 {
+  font-size: 20px; /* antes 24px */
+  margin-bottom: 20px; /* antes 25px */
+  color: #0366d6;
+  text-shadow: 1px 1px 1px rgba(0,0,0,.1); /* leve ajuste */
+}
+
+.ranking-list {
+  list-style: none;
+  padding: 0;
   display: flex;
+  flex-direction: column;
+  gap: 10px; /* antes 12px */
+}
+
+.ranking-list li {
+  background: linear-gradient(135deg, #ffffff, #e6f7ff);
+  padding: 12px 16px; /* antes 16px 20px */
+  border-radius: 12px; /* antes 16px */
+  font-weight: bold;
+  box-shadow: 0 6px 15px rgba(0,0,0,.08); /* leve ajuste */
+  transition: transform .3s ease, box-shadow .3s ease;
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
-  font-weight: bold;
+  font-size: 14px; /* antes 16px */
 }
 
-/* Destaques */
-.primeiro {
-  transform: scale(1.08);
-  border: 3px solid #ffd700;
+.ranking-list li:hover { 
+  transform: translateY(-4px); /* antes -6px */
+  box-shadow: 0 10px 25px rgba(0,0,0,.15);
 }
 
-.segundo .foto img {
-  border-color: #adb5bd;
+.ranking-list li.verde {
+  border-left: 6px solid #28a745; /* antes 8px */
+  color: #1e7e34;
+  background: linear-gradient(135deg, #e6ffef, #d4f9e3);
 }
 
-.terceiro .foto img {
-  border-color: #cd7f32;
+.ranking-list li.vermelho {
+  border-left: 6px solid #dc3545; /* antes 8px */
+  color: #b02a37;
+  background: linear-gradient(135deg, #ffe5e5, #ffdada);
 }
 
-.badge {
-  display: inline-block;
-  margin-top: 8px;
-  background: #ffd700;
-  color: #333;
-  padding: 6px 14px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: bold;
-}
+.ranking-list li::before { content:"🏅"; margin-right:10px; font-size:18px; } /* antes 20px */
+.ranking-list li.verde::before { content:"🥇"; }
+.ranking-list li.vermelho::before { content:"🥉"; }
 
-/* Animações */
-@keyframes subir {
-  from {
-    transform: translateY(40px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-@keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@media (max-width: 768px) {
-  .podio {
-    flex-direction: column;
-    align-items: center;
-  }
+@keyframes fadeQualidade {
+  from { opacity: 0; transform: translateY(30px); } /* antes 40px */
+  to { opacity: 1; transform: translateY(0); }
 }
 
   </style>
 </head>
 
 <body>
-
 <header>
   <h1>Dashboard SAC – Análise Mensal</h1>
   <a href="index.html">⬅ Voltar ao Dashboard Geral</a>
 </header>
 
-<!-- KPIs Mensais -->
+<!-- KPIs -->
 <div class="kpis">
   <div class="kpi"><h3>Total Mensal</h3><p id="kpiTotal">0</p></div>
   <div class="kpi"><h3>SLA Médio</h3><p>91%</p></div>
   <div class="kpi"><h3>CSAT Médio</h3><p>93%</p></div>
-  <div class="kpi"><h3>Tempo Médio</h3><p>6,8 min</p></div>
+  <div class="kpi"><h3>Tempo Médio</h3><p>5 min</p></div>
 </div>
 
-<!-- Gráficos -->
+<!-- GRÁFICOS -->
 <div class="dashboard">
-  <div class="chart-container">
-    <canvas id="graficoMensal"></canvas>
-  </div>
-  <div class="chart-container">
-    <canvas id="graficoDistribuicao"></canvas>
-  </div>
+  <div class="chart-container"><canvas id="graficoMensal"></canvas></div>
+  <div class="chart-container"><canvas id="graficoDistribuicao"></canvas></div>
 </div>
 
-<!-- Tabela -->
+<!-- TABELA -->
 <table>
   <thead>
     <tr>
@@ -361,7 +396,7 @@
   <tbody id="tabelaMensal"></tbody>
 </table>
 
-<!-- Plano de Ação -->
+<!-- PLANO DE AÇÃO -->
 <div class="plano-acao">
   <h2>Resumo Mensal – Pontos do Setor</h2>
   <div class="pontos">
@@ -383,99 +418,130 @@
   </div>
 </div>
 
-<script>
-  const atendentes = ["Giselle", "Francisco", "Joice", "João", "Vinicius", "Lucas"];
-  const totais = [25, 307, 194, 281, 244, 127];
-  const totalGeral = totais.reduce((a,b)=>a+b,0);
-
-  document.getElementById("kpiTotal").textContent = totalGeral;
-
-  // Gráfico Mensal
-  new Chart(document.getElementById("graficoMensal"), {
-    type: "line",
-    data: {
-      labels: ["Semana 1","Semana 2","Semana 3","Semana 4"],
-      datasets: atendentes.map((nome,i)=>({
-        label: nome,
-        data: Array.from({length:4},()=>Math.floor(Math.random()*60+80)),
-        borderColor: `hsl(${i*60},70%,50%)`,
-        tension: .3
-      }))
-    },
-    options: {
-      plugins:{ title:{ display:true, text:"Evolução Mensal por Semana"} },
-      responsive:true
-    }
-  });
-
-  // Distribuição
-  new Chart(document.getElementById("graficoDistribuicao"), {
-    type: "bar",
-    data: {
-      labels: atendentes,
-      datasets: [{
-        label: "Atendimentos no mês",
-        data: totais,
-        backgroundColor: atendentes.map((_,i)=>`hsl(${i*60},70%,60%)`)
-      }]
-    },
-    options: {
-      plugins:{ title:{ display:true, text:"Distribuição Mensal por Atendente"} },
-      responsive:true
-    }
-  });
-
-  // Tabela
-  const tbody = document.getElementById("tabelaMensal");
-  atendentes.forEach((nome,i)=>{
-    const tr = document.createElement("tr");
-    const perc = ((totais[i]/totalGeral)*100).toFixed(1);
-    const slaOK = totais[i] >= 90;
-    tr.innerHTML = `
-      <td>${nome}</td>
-      <td>${totais[i]}</td>
-      <td>${perc}%</td>
-      <td><span class="${slaOK?'badge-ok':'badge-nok'}">${slaOK?'Cumprido':'Não cumprido'}</span></td>
-    `;
-    tbody.appendChild(tr);
-  });
-  
-</script>
+<!-- DESTAQUE DA SEMANA -->
 <section class="destaque-semana">
   <h2>🏆 Destaque da Semana</h2>
-
   <div class="podio">
-
     <div class="posicao segundo">
-      <div class="foto">
-        <img src="image (2).png" alt="Segundo lugar">
-      </div>
+      <div class="foto"><img src="jj.jpg" alt="Segundo lugar"></div>
       <h3>João</h3>
       <span class="metricas">281 atendimentos</span>
       <div class="base">2º</div>
     </div>
 
     <div class="posicao primeiro destaque">
-      <div class="foto">
-        <img src="image.png" alt="Primeiro lugar">
-      </div>
-      <h3>Francisco</h3>
-      <span class="metricas">307 atendimentos</span>
+      <div class="foto"><img src="WhatsApp Image 2026-02-12 at 14.26.54.jpeg" alt="Primeiro lugar"></div>
+      <h3>Tiago</h3>
+      <span class="metricas">287 atendimentos</span>
       <span class="badge">⭐ Destaque</span>
       <div class="base">1º</div>
     </div>
 
     <div class="posicao terceiro">
-      <div class="foto">
-        <img src="image (1).png" alt="Terceiro lugar">
-      </div>
-      <h3>Vinicius</h3>
-      <span class="metricas">244 atendimentos</span>
+      <div class="foto"><img src="image.png" alt="Terceiro lugar"></div>
+      <h3>Francisco</h3>
+      <span class="metricas">221 atendimentos</span>
       <div class="base">3º</div>
     </div>
-
   </div>
 </section>
 
+<!-- QUALIDADE -->
+<section class="qualidade-section">
+  <div class="qualidade-card">
+    <h2>📊 Avaliação de Qualidade</h2>
+    <table class="qualidade-table">
+      <thead>
+        <tr>
+          <th>Agente</th>
+          <th>Nota (0 a 10)</th>
+        </tr>
+      </thead>
+      <tbody id="tabelaQualidade"></tbody>
+    </table>
+    <div class="ranking-box">
+      <h3>🏆 Ranking de Qualidade</h3>
+      <ul id="rankingQualidade" class="ranking-list"></ul>
+    </div>
+  </div>
+</section>
+
+<script>
+const atendentes = ["Giselle", "Francisco", "Joice", "João", "Vinicius", "Lucas"];
+const totais = [1, 221, 194, 135, 281, 221];
+const totalGeral = totais.reduce((a,b)=>a+b,0);
+document.getElementById("kpiTotal").textContent = totalGeral;
+
+// GRÁFICOS
+new Chart(document.getElementById("graficoMensal"), {
+  type: "line",
+  data: {
+    labels: ["Semana 1","Semana 2","Semana 3","Semana 4"],
+    datasets: atendentes.map((nome,i)=>({
+      label: nome,
+      data: Array.from({length:4},()=>Math.floor(Math.random()*60+80)),
+      borderColor: `hsl(${i*60},70%,50%)`,
+      tension: .3
+    }))
+  },
+  options: { plugins:{ title:{ display:true, text:"Evolução Mensal por Semana"} }, responsive:true }
+});
+
+new Chart(document.getElementById("graficoDistribuicao"), {
+  type: "bar",
+  data: {
+    labels: atendentes,
+    datasets: [{ label: "Atendimentos no mês", data: totais, backgroundColor: atendentes.map((_,i)=>`hsl(${i*60},70%,60%)`) }]
+  },
+  options: { plugins:{ title:{ display:true, text:"Distribuição Mensal por Atendente"} }, responsive:true }
+});
+
+// TABELA
+const tbody = document.getElementById("tabelaMensal");
+atendentes.forEach((nome,i)=>{
+  const tr = document.createElement("tr");
+  const perc = ((totais[i]/totalGeral)*100).toFixed(1);
+  const slaOK = totais[i] >= 90;
+  tr.innerHTML = `
+    <td>${nome}</td>
+    <td>${totais[i]}</td>
+    <td>${perc}%</td>
+    <td><span class="${slaOK?'badge-ok':'badge-nok'}">${slaOK?'Cumprido':'Não cumprido'}</span></td>
+  `;
+  tbody.appendChild(tr);
+});
+
+// QUALIDADE DINÂMICA
+const agentesQualidade = [...atendentes];
+let notas = {};
+const tabelaQualidade = document.getElementById("tabelaQualidade");
+
+agentesQualidade.forEach(nome => {
+  notas[nome] = 0;
+  const tr = document.createElement("tr");
+  tr.innerHTML = `<td>${nome}</td><td><input type="number" min="0" max="10" step="0.1" value="0" data-nome="${nome}"></td>`;
+  tabelaQualidade.appendChild(tr);
+});
+
+function atualizarRanking() {
+  const ranking = document.getElementById("rankingQualidade");
+  ranking.innerHTML = "";
+  Object.entries(notas).sort((a,b) => b[1]-a[1]).forEach(([nome,nota], index) => {
+    const li = document.createElement("li");
+    li.textContent = `${index+1}º - ${nome} (${nota.toFixed(1)})`;
+    li.classList.add(nota >= 8 ? "verde" : "vermelho");
+    ranking.appendChild(li);
+  });
+}
+
+document.querySelectorAll(".qualidade-table input").forEach(input => {
+  input.addEventListener("input", e => {
+    notas[e.target.dataset.nome] = parseFloat(e.target.value) || 0;
+    atualizarRanking();
+  });
+});
+
+atualizarRanking();
+</script>
 </body>
 </html>
